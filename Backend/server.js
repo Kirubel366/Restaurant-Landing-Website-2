@@ -12,9 +12,13 @@ dotenv.config();
 
 const app = express();
 app.use(cors({
-    origin: process.env.FRONTEND_URL,
-    credentials: true
-}))
+    // Fallback to the string if the ENV isn't loading correctly for a second
+    origin: process.env.FRONTEND_URL || "https://restaurant-landing-website-2.vercel.app",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
 app.use(express.json());
 
 // Routes
