@@ -1,0 +1,298 @@
+@import '@fontsource/playfair-display/400.css';
+@import '@fontsource/playfair-display/500.css';
+@import '@fontsource/playfair-display/600.css';
+@import '@fontsource/playfair-display/700.css';
+@import '@fontsource/dm-sans/400.css';
+@import '@fontsource/dm-sans/500.css';
+@import '@fontsource/dancing-script/700.css';
+@import '@fontsource/dm-sans/600.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Rich warm cream background */
+    --background: 45 40% 96%;
+    --foreground: 25 30% 12%;
+
+    /* Elegant card surfaces with warmth */
+    --card: 45 50% 98%;
+    --card-foreground: 25 30% 12%;
+
+    --popover: 45 50% 98%;
+    --popover-foreground: 25 30% 12%;
+
+    /* Rich terracotta/burnt orange accent */
+    --primary: 18 75% 48%;
+    --primary-foreground: 45 40% 98%;
+
+    /* Warm stone secondary */
+    --secondary: 35 25% 88%;
+    --secondary-foreground: 25 30% 18%;
+
+    --muted: 40 20% 92%;
+    --muted-foreground: 25 15% 45%;
+
+    /* Soft sage accent */
+    --accent: 145 25% 90%;
+    --accent-foreground: 145 40% 25%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 35 30% 86%;
+    --input: 35 30% 86%;
+    --ring: 18 75% 48%;
+
+    --radius: 0.75rem;
+
+    /* Typography */
+    --font-serif: 'Playfair Display', Georgia, serif;
+    --font-sans: 'DM Sans', system-ui, sans-serif;
+
+    /* Premium shadows */
+    --shadow-sm: 0 1px 3px 0 hsl(25 30% 12% / 0.04), 0 1px 2px -1px hsl(25 30% 12% / 0.04);
+    --shadow-md: 0 4px 12px -2px hsl(25 30% 12% / 0.08), 0 2px 6px -2px hsl(25 30% 12% / 0.04);
+    --shadow-lg: 0 12px 32px -4px hsl(25 30% 12% / 0.12), 0 4px 12px -4px hsl(25 30% 12% / 0.06);
+    --shadow-xl: 0 24px 48px -8px hsl(25 30% 12% / 0.16), 0 8px 24px -8px hsl(25 30% 12% / 0.08);
+    
+    /* Glow effects */
+    --glow-primary: 0 0 40px hsl(18 75% 48% / 0.25);
+    --glow-accent: 0 0 40px hsl(145 25% 50% / 0.2);
+
+    /* Gradients */
+    --gradient-warm: linear-gradient(135deg, hsl(35 50% 95%) 0%, hsl(45 40% 96%) 50%, hsl(40 35% 94%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(45 50% 99%) 0%, hsl(45 45% 97%) 100%);
+    --gradient-hero: linear-gradient(180deg, hsl(45 40% 96%) 0%, hsl(40 35% 93%) 100%);
+
+    /* Navbar border - stronger visibility */
+    --navbar-border: 35 25% 68%;
+    
+    /* Hero subtitle highlight */
+    --hero-subtitle-color: 18 60% 42%;
+    --hero-highlight: 35 40% 92%;
+    --gradient-primary: linear-gradient(135deg, hsl(18 75% 48%) 0%, hsl(25 80% 42%) 100%);
+
+    /* Sidebar */
+    --sidebar-background: 45 45% 97%;
+    --sidebar-foreground: 25 30% 12%;
+    --sidebar-primary: 18 75% 48%;
+    --sidebar-primary-foreground: 45 40% 98%;
+    --sidebar-accent: 145 25% 90%;
+    --sidebar-accent-foreground: 145 40% 25%;
+    --sidebar-border: 35 30% 86%;
+    --sidebar-ring: 18 75% 48%;
+  }
+
+  .dark {
+    --background: 25 25% 8%;
+    --foreground: 45 30% 92%;
+
+    --card: 25 22% 11%;
+    --card-foreground: 45 30% 92%;
+
+    --popover: 25 22% 11%;
+    --popover-foreground: 45 30% 92%;
+
+    --primary: 22 85% 55%;
+    --primary-foreground: 25 25% 8%;
+
+    --secondary: 25 15% 18%;
+    --secondary-foreground: 45 25% 88%;
+
+    --muted: 25 15% 18%;
+    --muted-foreground: 40 12% 55%;
+
+    --accent: 145 20% 18%;
+    --accent-foreground: 145 35% 75%;
+
+    --destructive: 0 65% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 25 18% 18%;
+    --input: 25 18% 18%;
+    --ring: 22 85% 55%;
+
+    --gradient-warm: linear-gradient(135deg, hsl(25 25% 10%) 0%, hsl(25 25% 8%) 50%, hsl(25 22% 9%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(25 22% 12%) 0%, hsl(25 22% 10%) 100%);
+    --gradient-hero: linear-gradient(180deg, hsl(25 25% 8%) 0%, hsl(25 22% 6%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(22 85% 55%) 0%, hsl(18 80% 48%) 100%);
+
+    --sidebar-background: 25 22% 10%;
+    --sidebar-foreground: 45 30% 92%;
+    --sidebar-primary: 22 85% 55%;
+    --sidebar-primary-foreground: 25 25% 8%;
+    --sidebar-accent: 145 20% 18%;
+    --sidebar-accent-foreground: 145 35% 75%;
+    --sidebar-border: 25 18% 18%;
+    --sidebar-ring: 22 85% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-sans);
+    background: var(--gradient-warm);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-serif);
+    @apply tracking-tight;
+  }
+}
+
+@layer components {
+  /* Glass card effect */
+  .glass-card {
+    @apply bg-card/80 backdrop-blur-md border border-border/50 rounded-xl;
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* Premium card with gradient */
+  .premium-card {
+    background: var(--gradient-card);
+    @apply border border-border/60 rounded-xl;
+    box-shadow: var(--shadow-md);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .premium-card:hover {
+    box-shadow: var(--shadow-xl);
+    transform: translateY(-4px);
+  }
+
+  /* Feature card with icon */
+  .feature-card {
+    @apply relative overflow-hidden rounded-2xl p-8;
+    background: var(--gradient-card);
+    border: 1px solid hsl(var(--border) / 0.6);
+    box-shadow: var(--shadow-md);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .feature-card::before {
+    content: '';
+    @apply absolute top-0 left-0 right-0 h-1;
+    background: var(--gradient-primary);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .feature-card:hover::before {
+    opacity: 1;
+  }
+
+  .feature-card:hover {
+    box-shadow: var(--shadow-xl);
+    transform: translateY(-6px);
+  }
+
+  /* Icon container */
+  .icon-container {
+    @apply w-14 h-14 rounded-xl flex items-center justify-center;
+    background: var(--gradient-primary);
+    box-shadow: var(--glow-primary);
+  }
+
+  .icon-container-secondary {
+    @apply w-12 h-12 rounded-lg flex items-center justify-center bg-accent;
+  }
+
+  /* Section divider */
+  .section-divider {
+    @apply w-16 h-1 rounded-full mx-auto;
+    background: var(--gradient-primary);
+  }
+
+  /* Animated underline for links */
+  .link-underline {
+    @apply relative;
+  }
+
+  .link-underline::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-full h-0.5 rounded-full origin-left scale-x-0;
+    background: var(--gradient-primary);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .link-underline:hover::after {
+    @apply scale-x-100;
+  }
+
+  /* Paper grain textured background - elegant and subtle */
+  .textured-bg {
+    position: relative;
+    background-color: hsl(var(--card));
+  }
+
+  .textured-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: 
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.035;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .textured-bg > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .dark .textured-bg::before {
+    opacity: 0.06;
+  }
+
+  /* Hero subtitle - elegant script style */
+  .hero-subtitle-elegant {
+    font-family: 'Dancing Script', cursive;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: hsl(var(--foreground));
+  }
+}
+
+@layer utilities {
+  .font-serif {
+    font-family: var(--font-serif);
+  }
+
+  .font-sans {
+    font-family: var(--font-sans);
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .gradient-text {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Animation utilities */
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+}
