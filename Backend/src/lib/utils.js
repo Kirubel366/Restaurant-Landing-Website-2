@@ -1,22 +1,45 @@
-import nodemailer from "nodemailer"
+import nodemailer from "nodemailer";
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-    },
-})
+export const sendEmail = async ({ to, subject, html, replyTo }) => {
+    // 1. Create transporter manually (Avoid 'service: gmail')
+    const transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false, // true for 465, false for 587
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS,
+        },
+        // Helpful for cloud deployments to prevent handshake timeouts
+        tls: {
+            rejectUnauthorized: false
+        }
+    });
 
-export const sendEmail = async ({ from, to, subject, html, bcc }) => {
     try {
-        await transporter.sendMail({ from, to, bcc, subject, html })
-        return { success: true }
+        // 2. Wrap in a Promise to handle the async nature of Nodemailer
+        return await new Promise((resolve, reject) => {
+            transporter.sendMail({
+                from: `"Restaurant Contact" <${process.env.EMAIL_USER}>`,
+                to,
+                replyTo, // The customer's email
+                subject,
+                html,
+            }, (err, info) => {
+                if (err) {
+                    console.error("Nodemailer Error:", err.message);
+                    resolve({ success: false, error: err.message });
+                } else {
+                    console.log("Email sent successfully:", info.response);
+                    resolve({ success: true });
+                }
+            });
+        });
     } catch (error) {
-        console.error("Error sending email:", error.message)
-        return { success: false, error }
+        console.error("Transporter Catch Error:", error.message);
+        return { success: false, error: error.message };
     }
-}
+};
