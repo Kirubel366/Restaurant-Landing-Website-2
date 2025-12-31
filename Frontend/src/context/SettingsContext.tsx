@@ -179,6 +179,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     } catch (err: any) {
       const message = err.response?.data?.message || "Error sending message.";
       toast.error(message);
+      alert(`Failed to send: ${err.message || "Unknown Error"}`);
       return { success: false, message };
     } finally {
       setContactFormSubmitting(false);
