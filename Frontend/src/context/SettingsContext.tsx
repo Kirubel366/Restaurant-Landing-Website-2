@@ -173,13 +173,15 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const sendContactForm = async (form: ContactForm) => {
     setContactFormSubmitting(true);
     try {
-      const { data } = await axiosInstance.post("/sendemail", form);
+      const res = await axiosInstance.post("/sendemail", form);
+
       toast.success("Message sent successfully");
-      return { success: true, message: data.message };
+      return { success: true, message: "Message sent successfully" };
     } catch (err: any) {
-      const message = err.response?.data?.message || "Error sending message.";
+      const message =
+        err.response?.data?.message || err.message || "Error sending message.";
+
       toast.error(message);
-      alert(`Failed to send: ${err.message || "Unknown Error"}`);
       return { success: false, message };
     } finally {
       setContactFormSubmitting(false);
