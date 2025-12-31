@@ -36,7 +36,10 @@ export default function Menu() {
   const { menuItems, categories } = useMenu();
   const { categoryDescriptionsEnabled } = useSettings();
   const [activeCategory, setActiveCategory] = useState<string>("all");
+
   const menuListRef = useRef<HTMLDivElement>(null);
+  const isFirstRender = useRef(true);
+
   const sectionTitleRef = useFadeInLeft<HTMLDivElement>();
   const menuCardRef = useScaleReveal<HTMLDivElement>();
 
@@ -52,28 +55,41 @@ export default function Menu() {
     return acc;
   }, {} as Record<string, typeof filteredItems>);
 
-  // Animate menu items when category changes
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
     if (!menuListRef.current) return;
+
+    // INCREASED OFFSET: 180px gives more space from the sticky filter
+    const marginOffset = 180;
+    const elementPosition = menuListRef.current.getBoundingClientRect().top;
+    const offsetPosition = elementPosition + window.pageYOffset - marginOffset;
+
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: "smooth",
+    });
 
     const items = menuListRef.current.querySelectorAll(".menu-item");
     gsap.fromTo(
       items,
-      { opacity: 0, y: 30, scale: 0.95 },
+      { opacity: 0, y: 20 },
       {
         opacity: 1,
         y: 0,
-        scale: 1,
-        duration: 0.5,
-        stagger: 0.05,
-        ease: "power3.out",
+        duration: 0.4,
+        stagger: 0.03,
+        ease: "power2.out",
+        delay: 0.2,
       }
     );
   }, [activeCategory]);
 
   return (
     <Layout>
-      {/* Hero Header with Background Image */}
       <PageHeroSection
         icon={<Utensils className="w-10 h-10 text-primary" />}
         title="Our Menu"
@@ -81,7 +97,7 @@ export default function Menu() {
         backgroundImage={heroImage}
       />
 
-      {/* Category Filter */}
+      {/* Sticky Category Filter */}
       <section className="sticky top-16 md:top-20 z-40 bg-background/90 backdrop-blur-md border-b border-border/50">
         <div className="container">
           <div className="relative">
@@ -116,7 +132,6 @@ export default function Menu() {
                 );
               })}
             </nav>
-            {/* Mobile scroll indicator */}
             <div className="absolute right-0 top-1/2 -translate-y-1/2 md:hidden pointer-events-none">
               <div className="flex items-center gap-1 bg-gradient-to-l from-background via-background to-transparent pl-6 pr-1 py-4">
                 <ChevronRight className="w-4 h-4 text-muted-foreground animate-pulse" />
@@ -126,11 +141,10 @@ export default function Menu() {
         </div>
       </section>
 
-      {/* Menu Items */}
+      {/* Menu List Container */}
       <section className="py-16 md:py-24 textured-bg min-h-screen">
         <div ref={menuListRef} className="container max-w-6xl">
           {activeCategory === "all" ? (
-            // Show all categories grouped
             <div className="space-y-20">
               {categories.map((cat) => {
                 const items = groupedItems[cat.id];
@@ -142,7 +156,7 @@ export default function Menu() {
                     <div className="mb-10 text-center">
                       <div className="inline-flex items-center justify-center gap-4 mb-4">
                         <div className="h-px w-12 md:w-20 bg-gradient-to-r from-transparent to-primary/50" />
-                        <div className="icon-container w-14 h-14">
+                        <div className="icon-container w-14 h-14 flex items-center justify-center rounded-full bg-primary shadow-lg">
                           <Icon className="w-7 h-7 text-primary-foreground" />
                         </div>
                         <div className="h-px w-12 md:w-20 bg-gradient-to-l from-transparent to-primary/50" />
@@ -157,37 +171,9 @@ export default function Menu() {
                       )}
                     </div>
 
-                    {/* Modern Grid Layout */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                       {items.map((item) => (
-                        <div
-                          key={item.id}
-                          className="menu-item group relative overflow-hidden rounded-2xl bg-card border border-border/50 p-6 transition-all duration-500 hover:shadow-xl hover:shadow-primary/5 hover:border-primary/20 hover:-translate-y-1"
-                        >
-                          {/* Decorative gradient accent */}
-                          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/0 via-primary/50 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                          <div className="flex justify-between items-start gap-4">
-                            <div className="flex-1 min-w-0">
-                              <h3 className="font-serif text-xl font-medium text-foreground group-hover:text-primary transition-colors duration-300">
-                                {item.name}
-                              </h3>
-                              {item.description && (
-                                <p className="text-sm text-muted-foreground mt-2 line-clamp-2">
-                                  {item.description}
-                                </p>
-                              )}
-                            </div>
-                            <div className="flex-shrink-0 relative">
-                              <span className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-primary/10 text-primary font-semibold text-lg group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
-                                {formatPrice(item.price)}
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* Subtle bottom decoration */}
-                          <div className="absolute bottom-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-                        </div>
+                        <MenuItem key={item.id} item={item} />
                       ))}
                     </div>
                   </div>
@@ -195,12 +181,12 @@ export default function Menu() {
               })}
             </div>
           ) : (
-            // Show filtered category
             <div>
+              {/* Single Category View */}
               <div ref={sectionTitleRef} className="mb-10 text-center">
                 <div className="inline-flex items-center justify-center gap-4 mb-4">
                   <div className="h-px w-12 md:w-20 bg-gradient-to-r from-transparent to-primary/50" />
-                  <div className="icon-container w-14 h-14">
+                  <div className="icon-container w-14 h-14 flex items-center justify-center rounded-full bg-primary shadow-lg">
                     {(() => {
                       const category = categories.find(
                         (c) => c.id === activeCategory
@@ -234,34 +220,7 @@ export default function Menu() {
                   className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6"
                 >
                   {filteredItems.map((item) => (
-                    <div
-                      key={item.id}
-                      className="menu-item group relative overflow-hidden rounded-2xl bg-card border border-border/50 p-6 transition-all duration-500 hover:shadow-xl hover:shadow-primary/5 hover:border-primary/20 hover:-translate-y-1"
-                    >
-                      {/* Decorative gradient accent */}
-                      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/0 via-primary/50 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                      <div className="flex justify-between items-start gap-4">
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-serif text-xl font-medium text-foreground group-hover:text-primary transition-colors duration-300">
-                            {item.name}
-                          </h3>
-                          {item.description && (
-                            <p className="text-sm text-muted-foreground mt-2 line-clamp-2">
-                              {item.description}
-                            </p>
-                          )}
-                        </div>
-                        <div className="flex-shrink-0 relative">
-                          <span className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-primary/10 text-primary font-semibold text-lg group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
-                            {formatPrice(item.price)}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Subtle bottom decoration */}
-                      <div className="absolute bottom-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-                    </div>
+                    <MenuItem key={item.id} item={item} />
                   ))}
                 </div>
               ) : (
@@ -276,5 +235,31 @@ export default function Menu() {
         </div>
       </section>
     </Layout>
+  );
+}
+
+function MenuItem({ item }: { item: any }) {
+  return (
+    <div className="menu-item group relative overflow-hidden rounded-2xl bg-card border border-border/50 p-6 transition-all duration-500 hover:shadow-xl hover:shadow-primary/5 hover:border-primary/20 hover:-translate-y-1">
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/0 via-primary/50 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      <div className="flex justify-between items-start gap-4">
+        <div className="flex-1 min-w-0">
+          <h3 className="font-serif text-xl font-medium text-foreground group-hover:text-primary transition-colors duration-300">
+            {item.name}
+          </h3>
+          {item.description && (
+            <p className="text-sm text-muted-foreground mt-2 line-clamp-2">
+              {item.description}
+            </p>
+          )}
+        </div>
+        <div className="flex-shrink-0">
+          <span className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-primary/10 text-primary font-semibold text-lg group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
+            {formatPrice(item.price)}
+          </span>
+        </div>
+      </div>
+      <div className="absolute bottom-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+    </div>
   );
 }
