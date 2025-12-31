@@ -31,34 +31,15 @@ app.use("/api/categories", categoryRoutes);
 app.use("/api/settings", settingsRoutes);
 
 app.post("/api/sendemail", async (req, res) => {
-    try {
-        const { name, email, message } = req.body;
-        if (!name || !email || !message) {
-            return res.status(400).json({ message: "All fields are required!" });
-        }
+    const { name, email, message } = req.body;
+    
+    // Call the updated sendEmail function
+    const result = await sendEmail({ name, email, message });
 
-        const result = await sendEmail({
-            from: process.env.EMAIL_USER, // Gmail requires 'from' to be the authenticated user
-            to: "kirubeld.21@gmail.com",
-            replyTo: email, // Put the user's email here so you can reply to them
-            subject: `New Contact Form Submission from ${name}`,
-            html: `
-                <p><strong>Name:</strong> ${name}</p>
-                <p><strong>Email:</strong> ${email}</p>
-                <p><strong>Message:</strong> ${message}</p>
-            `,
-        });
-
-        if (result.success) {
-            return res.status(200).json({ message: "Email sent successfully!" });
-        } else {
-            // Log the actual error to Render logs
-            console.error("Email Result Error:", result.error);
-            return res.status(500).json({ message: "Error sending email." });
-        }
-    } catch (error) {
-        console.error("Route Crash Error:", error);
-        return res.status(500).json({ message: "Internal server error." });
+    if (result.success) {
+        res.status(200).json({ message: "Email sent successfully!" });
+    } else {
+        res.status(500).json({ message: "Error sending email.", error: result.error });
     }
 });
 
