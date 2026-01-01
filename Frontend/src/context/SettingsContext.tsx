@@ -163,6 +163,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       setTimeout(() => setVideoSubmitted(false), 3000);
       return true;
     } catch (err) {
+      console.log(err);
       toast.error("Failed to save video URL to database");
       return false;
     } finally {

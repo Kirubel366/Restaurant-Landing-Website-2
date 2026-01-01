@@ -15,7 +15,7 @@ app.use(cors({
     // Fallback to the string if the ENV isn't loading correctly for a second
     origin: process.env.FRONTEND_URL || "https://restaurant-landing-website-2.vercel.app",
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    methods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
